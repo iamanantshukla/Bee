@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "31945512287",
+    "project_id": "bee-app-df3fc",
+    "storage_bucket": "bee-app-df3fc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31945512287:android:cc581573573180f6b1d2ea",
+        "android_client_info": {
+          "package_name": "com.devanant.bee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "31945512287-5gsp74h28j1qveki9ahmrrl041dqdk3e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDb_U5Csvbxs_-Y1qxBjYxC2tmS6IbstDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "31945512287-5gsp74h28j1qveki9ahmrrl041dqdk3e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

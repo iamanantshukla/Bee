@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Dark"
+    tools:context=".UI.LoginHome">
+
+    <LinearLayout
+        android:id="@+id/linearEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:transitionName="emailTransition"
+        app:layout_constraintBottom_toTopOf="@+id/btnNext"
+        app:layout_constraintTop_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/TextHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="@font/poppinsmedium"
+            android:text="@string/HeaderSignUp"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/EditEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/theme_outline_btn"
+            android:ems="10"
+            android:fontFamily="@font/poppinsregular"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="16dp"
+            android:paddingTop="10dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/Light"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/EditPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/theme_outline_btn"
+            android:ems="10"
+            android:fontFamily="@font/poppinsregular"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:paddingLeft="16dp"
+            android:paddingTop="10dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/Light"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="@font/poppinsmedium"
+            android:text="OR"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnGoogle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/theme_filled_btn"
+            android:fontFamily="@font/poppinsbold"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Google"
+            android:textColor="@color/Dark"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="48dp"
+            android:fontFamily="@font/poppinsmedium"
+            android:text="@string/AlreadyAccount"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.3"
+        android:scaleType="centerCrop"
+        android:transitionName="background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/mainbackground" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnNext2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="48dp"
+        android:background="@drawable/theme_filled_btn"
+        android:fontFamily="@font/poppinsbold"
+        android:gravity="center"
+        android:paddingStart="36dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="36dp"
+        android:paddingBottom="8dp"
+        android:text="Next"
+        android:transitionName="nextTransition"
+        android:textColor="@color/Dark"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearEmail"/>
+
+    <TextView
+        android:id="@+id/textLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppinssemibold"
+        android:text="bee."
+        android:transitionName="logoTransition"
+        android:textColor="@color/Theme"
+        android:textSize="42sp"
+        app:layout_constraintBottom_toTopOf="@+id/textTagline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/BtnSignIn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="48dp"
+        android:alpha="0"
+        android:background="@drawable/theme_outline_btn"
+        android:fontFamily="@font/poppinsbold"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="Sign in"
+        android:textColor="@color/Theme"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/BtnSignUp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="16dp"
+        android:alpha="0"
+        android:background="@drawable/theme_filled_btn"
+        android:fontFamily="@font/poppinsbold"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="Sign up"
+        android:textColor="@color/Dark"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/BtnSignIn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textTagline"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="32dp"
+        android:alpha="0"
+        android:fontFamily="@font/poppinsbold"
+        android:text="@string/Tagline"
+        android:textColor="@color/Light"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/BtnSignUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

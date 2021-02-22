@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">bee</string>
+    <string name="Tagline"><font color="#FFFEFC">Bringing people </font> <font color='#FFC400'>closer </font>than ever</string>
+    <string name="AlreadyAccount"><font color="#FFFEFC">Already have an account? </font> <font color='#FFC400'>Click here </font></string>
+    <string name="NewAccount"><font color="#FFFEFC">New Here? </font> <font color='#FFC400'>Click here </font></string>
+    <string name="HeaderSignUp">Sign up using email or google</string>
+    <string name="HeaderLogin">Sign in using email or google</string>
+</resources>
