@@ -8,6 +8,7 @@
     tools:context=".UI.Home.HomeActivity">
 
     <com.ismaeldivita.chipnavigation.ChipNavigationBar
+        android:id="@+id/bottom_navigation_bar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginStart="12dp"
@@ -16,8 +17,23 @@
         android:background="@drawable/theme_filled_btn"
         android:elevation="16dp"
         app:cnb_menuResource="@menu/bottom_navigation"
+        app:cnb_orientationMode="horizontal"
+        app:cnb_unselectedColor="@color/Primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" >
+
+    </com.ismaeldivita.chipnavigation.ChipNavigationBar>
+
+    <FrameLayout
+        android:id="@+id/FragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
