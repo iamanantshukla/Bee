@@ -5,4 +5,8 @@
     <string name="NewAccount"><font color="#FFFEFC">New Here? </font> <font color='#FFC400'>Click here </font></string>
     <string name="HeaderSignUp">Sign up using email or google</string>
     <string name="HeaderLogin">Sign in using email or google</string>
+    <string name="title_activity_home">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

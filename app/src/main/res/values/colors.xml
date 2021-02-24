@@ -8,4 +8,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="Dark">#1F2933</color>
     <color name="Light">#FFFEFC</color>
+    <color name="SplashScreen">#FFC400</color>
+    <color name="SplashText">#FFFEFC</color>
 </resources>
