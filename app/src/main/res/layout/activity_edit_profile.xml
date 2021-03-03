@@ -100,6 +100,7 @@
         android:layout_marginEnd="32dp"
         android:ems="10"
         android:hint="Choose your interest"
+        android:focusableInTouchMode="false"
         android:inputType="textPersonName"
         android:textColor="@color/Font"
         android:textColorHint="@color/Theme"

@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.webkit.URLUtil;
@@ -82,13 +84,12 @@ public class EditProfile extends AppCompatActivity {
         UserID=mAuth.getCurrentUser().getUid();
 
         //getting image from firestore
-        StorageReference profileRef=storageReference.child("users/"+mAuth.getCurrentUser().getUid()+"/profile.jpg");
-        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(profilePic);
-            }
-        });
+        String ImageEncoded=tinyDB.getString("ProfilePic");
+        if(!ImageEncoded.isEmpty()){
+            byte[] decodedByte = Base64.decode(ImageEncoded, 0);
+            Bitmap image= BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+            profilePic.setImageBitmap(image);
+        }
 
         TextName.setText(map.get("Username").toString());
         Interests= (ArrayList<String>) map.get("Interest");
@@ -136,18 +137,28 @@ public class EditProfile extends AppCompatActivity {
             TextName.setError("Username is empty");
             return false;
         }else{
-                if(!Instagram.isEmpty()){
-                    if(!URLUtil.isValidUrl(Instagram)){
+            if(!Instagram.isEmpty()){
+                if(!URLUtil.isValidUrl(Instagram)){
+                    ImageInsta.setError("Enter valid URL or else leave empty");
+                    return false;
+                }else{
+                    if(!Instagram.contains("instagram") || !Instagram.toLowerCase().contains("instagram")){
                         ImageInsta.setError("Enter valid URL or else leave empty");
                         return false;
                     }
                 }
-                if(!Facebook.isEmpty()){
-                    if(!URLUtil.isValidUrl(Facebook)){
+            }
+            if(!Facebook.isEmpty()){
+                if(!URLUtil.isValidUrl(Facebook)){
+                    ImageFB.setError("Enter valid URL or else leave empty");
+                    return false;
+                }else{
+                    if(!Facebook.contains("facebook") || !Facebook.toLowerCase().contains("facebook")){
                         ImageFB.setError("Enter valid URL or else leave empty");
                         return false;
                     }
                 }
+            }
         }
         return true;
     }
@@ -179,6 +190,7 @@ public class EditProfile extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(EditProfile.this, "Edited Successfully", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -209,11 +221,13 @@ public class EditProfile extends AppCompatActivity {
             ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
             compressedImageFile.compress(Bitmap.CompressFormat.JPEG,80,byteArrayOutputStream);
             finalImage=byteArrayOutputStream.toByteArray();
-
+            String imageEncoded = Base64.encodeToString(finalImage, Base64.DEFAULT);
+            tinyDB.putString("ProfilePic", imageEncoded);
             Picasso.get().load(resultUri).into(profilePic);
             uploadToFirebaseStorage();
         }
     }
+
 
     private void uploadToFirebaseStorage() {
         final StorageReference Fileref = storageReference.child("users/" + mAuth.getCurrentUser().getUid() + "/" + "profile.jpg");

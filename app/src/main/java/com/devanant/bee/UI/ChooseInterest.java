@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.devanant.bee.Database.TinyDB;
 import com.devanant.bee.R;
@@ -90,19 +91,17 @@ public class ChooseInterest extends AppCompatActivity implements organisationAda
 
     @Override
     public void selectedItem(String organisation) {
-        if(userInterest.contains(organisation)){
+        if (userInterest.contains(organisation)) {
             userInterest.remove(organisation);
-        }else {
-            userInterest.add(organisation);
+            setupText();
+        } else {
+            if(userInterest.size()==3){
+                Toast.makeText(getApplicationContext(),"You can only select at max 3 interest", Toast.LENGTH_SHORT).show();
+            }else {
+                userInterest.add(organisation);
+                setupText();
+            }
         }
-
-        setupText();
-
-        if(userInterest.size()==3){
-            tinyDB.putListString("UserInterest",userInterest);
-            finish();
-        }
-
     }
 
     private void setupText() {

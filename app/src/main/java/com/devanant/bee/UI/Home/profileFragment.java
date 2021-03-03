@@ -2,6 +2,8 @@ package com.devanant.bee.UI.Home;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -10,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +34,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -91,15 +95,56 @@ public class profileFragment extends Fragment {
                 }
             });
         }
-        StorageReference profileRef=storageReference.child("users/"+mAuth.getCurrentUser().getUid()+"/profile.jpg");
-        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                imageUri=uri;
-                PROFILE_PIC=1;
-            }
-        });
+
     }
+
+    public static String encodeTobase64(Bitmap image) {
+        Bitmap immage = image;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        immage.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
+
+        Log.d("Image Log:", imageEncoded);
+        return imageEncoded;
+    }
+
+    private void loadProfileImage() {
+        String ImageEncoded=tinyDB.getString("ProfilePic");
+        if(ImageEncoded.isEmpty()) {
+            Log.i(TAG, "loadProfileImage: Empty");
+            StorageReference profileRef = storageReference.child("users/" + mAuth.getCurrentUser().getUid() + "/profile.jpg");
+            profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.get().load(uri).into(profilePic);
+                    Picasso.get().load(uri).into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            Log.i(TAG, "onBitmapLoaded: Saved to tinyDB");
+                            tinyDB.putString("ProfilePic",encodeTobase64(bitmap));
+                        }
+
+                        @Override
+                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                            Log.i(TAG, "onBitmapFailed: "+e.getMessage());
+                        }
+
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                        }
+                    });
+                }
+            });
+        }else{
+            Log.i(TAG, "loadProfileImage: Found");
+            byte[] decodedByte = Base64.decode(ImageEncoded, 0);
+            Bitmap image=BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+            profilePic.setImageBitmap(image);
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,15 +167,24 @@ public class profileFragment extends Fragment {
         UserID=mAuth.getCurrentUser().getUid();
 
         //getting image from firestore
-        if(PROFILE_PIC==1) {
-            Picasso.get().load(imageUri).into(profilePic);
-        }
+        //loadProfileImage();
+
+
+
 
         //Edit Profile
         BtnEditProf.setOnClickListener(v->{
             Intent i=new Intent(getActivity(), EditProfile.class);
             startActivity(i);
         });
+
+        //setUpProfile();
+
+
+        return view;
+    }
+
+    private void setUpProfile() {
 
         TextName.setText(map.get("Username").toString());
         TextOrg.setText(map.get("Organisation").toString());
@@ -181,8 +235,19 @@ public class profileFragment extends Fragment {
         }else{
             ImageFB.setAlpha(0.3f);
         }
-
-        return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        map=tinyDB.getObject("UserProfile",map.getClass());
+        loadProfileImage();
+        setUpProfile();
+
+    }
 }

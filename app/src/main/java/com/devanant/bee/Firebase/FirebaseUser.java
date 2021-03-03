@@ -7,13 +7,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class FirebaseAuthentication {
+public class FirebaseUser {
 
     private Application application;
     private FirebaseFirestore firestore;
     private FirebaseAuth mAuth;
 
-    public FirebaseAuthentication( Application application) {
+    public FirebaseUser(Application application) {
         this.application = application;
     }
 
