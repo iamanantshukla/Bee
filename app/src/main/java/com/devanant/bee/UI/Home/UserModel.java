@@ -12,19 +12,19 @@ public class UserModel {
     private String ProfilePic;
     private String Username;
 
-    public UserModel(String bio, String facebook, String instagram, ArrayList<String> interest, String organisation, String phoneNumber, String profilePic, String Username) {
+    public UserModel(String bio, String facebook, String instagram, ArrayList<String> interest, String organisation, String phoneNumber, String ProfilePic, String Username) {
         Bio = bio;
         Facebook = facebook;
         Instagram = instagram;
         Interest = interest;
         Organisation = organisation;
         PhoneNumber = phoneNumber;
-        ProfilePic = profilePic;
+        this.ProfilePic = ProfilePic;
         this.Username = Username;
     }
     public UserModel()
     {
-
+        //empty constructor
     }
 
     public String getBio() {
