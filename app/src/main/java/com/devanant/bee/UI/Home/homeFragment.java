@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -30,7 +31,7 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
     private FirebaseFirestore fstore;
     private List<UserModel> userModels;
     private UserAdapter userAdapter;
-    private ViewPager2 suggestionPager;
+    private RecyclerView suggestionPager;
     private ArrayList<String> interest;
     private FirebaseAuth mAuth;
 
@@ -44,10 +45,16 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
         tinyDB=new TinyDB(getContext());
         userModels=new ArrayList<>();
         interest=new ArrayList<>();
-
-        interest=tinyDB.getListString("UserInterest");
         mAuth=FirebaseAuth.getInstance();
 
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        interest=tinyDB.getListString("UserInterest");
         fstore.collection("Users").whereArrayContainsAny("Interest",interest).limit(5).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -55,12 +62,12 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
                 {
                     for(QueryDocumentSnapshot doc:value)
                     {
-                        if(!doc.getId().equals(mAuth.getCurrentUser().getUid())){
-                            UserModel model=doc.toObject(UserModel.class);
-                            userModels.add(model);
-                            userAdapter.notifyDataSetChanged();
-                            Log.i("HomeFragmentSuggestion",model.getUsername());
-                        }
+                        //if(!doc.getId().equals(mAuth.getCurrentUser().getUid())){
+                        UserModel model=doc.toObject(UserModel.class);
+                        userModels.add(model);
+                        userAdapter.notifyDataSetChanged();
+                        Log.i("HomeFragmentSuggestion",model.getUsername());
+                        //}
                     }
                 }
                 else{
@@ -69,16 +76,11 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
 
             }
         });
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         View root=inflater.inflate(R.layout.fragment_home, container, false);
         suggestionPager=root.findViewById(R.id.SuggestionViewPager);
+        suggestionPager.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
+        suggestionPager.setHasFixedSize(true);
         setUpViewPager();
         return root;
     }
@@ -86,10 +88,6 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
     private void setUpViewPager() {
         userAdapter=new UserAdapter(userModels,this);
         suggestionPager.setAdapter(userAdapter);
-        suggestionPager.setPadding(0,0,0,0);
-        suggestionPager.setClipToPadding(false);
-        suggestionPager.setClipChildren(false);
-        suggestionPager.setOffscreenPageLimit(4);
     }
 
 
