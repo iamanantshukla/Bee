@@ -11,6 +11,7 @@ import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 public class HomeActivity extends AppCompatActivity {
 
+
     private ChipNavigationBar bottomNavigation;
     private homeFragment homeFrag;
     private profileFragment profileFrag;

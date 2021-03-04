@@ -127,6 +127,8 @@ public class CreateProfile extends AppCompatActivity {
         map.put("Organisation", Organisation);
         map.put("Facebook", Facebook);
         map.put("Instagram", Instagram);
+        map.put("Bio","");
+        map.put("ProfilePic","");
         map.put("PhoneNumber", PhoneNo);
         map.put("Interest", userInterest);
         tinyDB.putObject("UserProfile", map);
@@ -170,12 +172,22 @@ public class CreateProfile extends AppCompatActivity {
                     if(!URLUtil.isValidUrl(Instagram)){
                         EditInsta.setError("Enter valid URL or else leave empty");
                         return false;
+                    }else{
+                        if(!Instagram.contains("instagram") || !Instagram.toLowerCase().contains("instagram")){
+                            EditInsta.setError("Enter valid URL or else leave empty");
+                            return false;
+                        }
                     }
                 }
                 if(!Facebook.isEmpty()){
                     if(!URLUtil.isValidUrl(Facebook)){
                         EditFB.setError("Enter valid URL or else leave empty");
                         return false;
+                    }else{
+                        if(!Facebook.contains("facebook") || !Facebook.toLowerCase().contains("facebook")){
+                            EditFB.setError("Enter valid URL or else leave empty");
+                            return false;
+                        }
                     }
                 }
                 return true;

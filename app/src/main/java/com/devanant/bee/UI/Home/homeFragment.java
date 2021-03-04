@@ -2,65 +2,97 @@ package com.devanant.bee.UI.Home;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.devanant.bee.Database.TinyDB;
 import com.devanant.bee.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link homeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class homeFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FirebaseFirestore fstore;
+    private List<UserModel> userModels;
+    private UserAdapter userAdapter;
+    private RecyclerView suggestionPager;
+    private ArrayList<String> interest;
+    private FirebaseAuth mAuth;
 
-    public homeFragment() {
-        // Required empty public constructor
-    }
+    private TinyDB tinyDB;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment homeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static homeFragment newInstance(String param1, String param2) {
-        homeFragment fragment = new homeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        fstore=FirebaseFirestore.getInstance();
+        tinyDB=new TinyDB(getContext());
+        userModels=new ArrayList<>();
+        interest=new ArrayList<>();
+        mAuth=FirebaseAuth.getInstance();
+
     }
 
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        interest=tinyDB.getListString("UserInterest");
+        fstore.collection("Users").whereArrayContainsAny("Interest",interest).limit(5).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(!value.isEmpty())
+                {
+                    for(QueryDocumentSnapshot doc:value)
+                    {
+                        //if(!doc.getId().equals(mAuth.getCurrentUser().getUid())){
+                        UserModel model=doc.toObject(UserModel.class);
+                        userModels.add(model);
+                        userAdapter.notifyDataSetChanged();
+                        Log.i("HomeFragmentSuggestion",model.getUsername());
+                        //}
+                    }
+                }
+                else{
+                    Log.i("HomeFragmentSuggestion","Empty"+interest.toString());
+                }
+
+            }
+        });
+
+        View root=inflater.inflate(R.layout.fragment_home, container, false);
+        suggestionPager=root.findViewById(R.id.SuggestionViewPager);
+        suggestionPager.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
+        suggestionPager.setHasFixedSize(true);
+        setUpViewPager();
+        return root;
+    }
+
+    private void setUpViewPager() {
+        userAdapter=new UserAdapter(userModels,this);
+        suggestionPager.setAdapter(userAdapter);
+    }
+
+
+    @Override
+    public void selectedpager(UserModel viewPagerModel) {
+
     }
 }
