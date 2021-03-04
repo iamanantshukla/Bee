@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.devanant.bee.Database.TinyDB;
 import com.devanant.bee.R;
+import com.devanant.bee.UI.Home.UserSearchModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,11 +91,12 @@ public class ChooseInterest extends AppCompatActivity implements organisationAda
 
     @Override
     public void selectedItem(String organisation) {
-        if(userInterest.contains(organisation)){
+        if(userInterest.contains(organisation)) {
             userInterest.remove(organisation);
-        }else {
-            userInterest.add(organisation);
         }
+//        }else {
+//            userInterest.add(organisation);
+//        }
 
         setupText();
 

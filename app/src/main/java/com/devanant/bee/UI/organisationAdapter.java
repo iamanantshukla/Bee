@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devanant.bee.R;
+import com.devanant.bee.UI.Home.UserSearchModel;
 
 import java.util.ArrayList;
 
