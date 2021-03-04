@@ -68,6 +68,8 @@ public class ChooseOrganisation extends AppCompatActivity implements organisatio
             //use .toLowerCase() for better matches
             if(d.contains(text)){
                 temp.add(d);
+            }else if(d.toLowerCase().contains(text)){
+                temp.add(d);
             }
         }
         //update recyclerview

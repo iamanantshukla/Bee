@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.devanant.bee">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,6 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bee">
         <activity android:name=".UI.Home.SearchUsersTags"></activity>
+        <activity android:name=".UI.Home.HomeActivity" />
+        <activity android:name=".UI.EditProfile"></activity>
         <activity android:name=".UI.Home.HomeActivity" />
         <activity android:name=".UI.ChooseInterest" />
         <activity android:name=".UI.ChooseOrganisation" />
@@ -26,7 +31,8 @@
         <activity android:name=".UI.LoginHome" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Base.Theme.AppCompat" />
     </application>
 
 </manifest>
