@@ -1,5 +1,6 @@
 package com.devanant.bee.UI.Home;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.mViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull UserAdapter.mViewHolder holder, int position) {
-     holder.setUserName(viewPagerModel.get(position).getUserName());
+     holder.setUserName(viewPagerModel.get(position).getUsername());
      holder.setProfilePic(viewPagerModel.get(position).getProfilePic());
 
     }
@@ -70,6 +71,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.mViewHolder>{
         public void setProfilePic(String url){
             ProfilePic=view.findViewById(R.id.pagerCoverImage);
             Picasso.get().load(url).into(ProfilePic);
+            Log.i("ProfileURL",url);
         }
 
     }

@@ -10,9 +10,9 @@ public class UserModel {
     private String Organisation;
     private String PhoneNumber;
     private String ProfilePic;
-    private String UserName;
+    private String Username;
 
-    public UserModel(String bio, String facebook, String instagram, ArrayList<String> interest, String organisation, String phoneNumber, String profilePic, String userName) {
+    public UserModel(String bio, String facebook, String instagram, ArrayList<String> interest, String organisation, String phoneNumber, String profilePic, String Username) {
         Bio = bio;
         Facebook = facebook;
         Instagram = instagram;
@@ -20,7 +20,11 @@ public class UserModel {
         Organisation = organisation;
         PhoneNumber = phoneNumber;
         ProfilePic = profilePic;
-        UserName = userName;
+        this.Username = Username;
+    }
+    public UserModel()
+    {
+
     }
 
     public String getBio() {
@@ -79,11 +83,11 @@ public class UserModel {
         ProfilePic = profilePic;
     }
 
-    public String getUserName() {
-        return UserName;
+    public String getUsername() {
+        return Username;
     }
 
-    public void setUserName(String userName) {
-        UserName = userName;
+    public void setUsername(String UserName) {
+        Username = UserName;
     }
 }
