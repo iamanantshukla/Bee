@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -34,8 +35,11 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
     private RecyclerView suggestionPager;
     private ArrayList<String> interest;
     private FirebaseAuth mAuth;
-
+    private RecyclerView categoryRecyclerView;
+    private List<String> titles;
+    private List<Integer> mImages;
     private TinyDB tinyDB;
+    private CategoryAdapter categoryAdapter;
 
 
     @Override
@@ -69,6 +73,33 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
                         Log.i("HomeFragmentSuggestion",model.getUsername());
                         //}
                     }
+                    for(QueryDocumentSnapshot doc:value)
+                    {
+                        //if(!doc.getId().equals(mAuth.getCurrentUser().getUid())){
+                        UserModel model=doc.toObject(UserModel.class);
+                        userModels.add(model);
+                        userAdapter.notifyDataSetChanged();
+                        Log.i("HomeFragmentSuggestion",model.getUsername());
+                        //}
+                    }
+                    for(QueryDocumentSnapshot doc:value)
+                    {
+                        //if(!doc.getId().equals(mAuth.getCurrentUser().getUid())){
+                        UserModel model=doc.toObject(UserModel.class);
+                        userModels.add(model);
+                        userAdapter.notifyDataSetChanged();
+                        Log.i("HomeFragmentSuggestion",model.getUsername());
+                        //}
+                    }
+                    for(QueryDocumentSnapshot doc:value)
+                    {
+                        //if(!doc.getId().equals(mAuth.getCurrentUser().getUid())){
+                        UserModel model=doc.toObject(UserModel.class);
+                        userModels.add(model);
+                        userAdapter.notifyDataSetChanged();
+                        Log.i("HomeFragmentSuggestion",model.getUsername());
+                        //}
+                    }
                 }
                 else{
                     Log.i("HomeFragmentSuggestion","Empty"+interest.toString());
@@ -79,6 +110,40 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
 
         View root=inflater.inflate(R.layout.fragment_home, container, false);
         suggestionPager=root.findViewById(R.id.SuggestionViewPager);
+        categoryRecyclerView=root.findViewById(R.id.CategoryRecyclerView);
+        titles=new ArrayList<>();
+        mImages=new ArrayList<>();
+        categoryAdapter=new CategoryAdapter(getContext(),titles,mImages);
+        mImages.add(R.drawable.dance);
+        mImages.add(R.drawable.music);
+        mImages.add(R.drawable.photography);
+        mImages.add(R.drawable.design);
+        mImages.add(R.drawable.video);
+        mImages.add(R.drawable.dramatics);
+        mImages.add(R.drawable.reading);
+        mImages.add(R.drawable.dance);
+        mImages.add(R.drawable.music);
+        mImages.add(R.drawable.photography);
+
+
+
+        titles.add("Dance");
+        titles.add("Music");
+        titles.add("Photography");
+        titles.add("Designing");
+        titles.add("Videography");
+        titles.add("Dramatics");
+        titles.add("Reading");
+        titles.add("Dance");
+        titles.add("Music");
+        titles.add("Photography");
+
+
+        GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(),2,GridLayoutManager.VERTICAL,false);
+        categoryRecyclerView.setLayoutManager(gridLayoutManager);
+        categoryRecyclerView.setHasFixedSize(true);
+        categoryRecyclerView.setAdapter(categoryAdapter);
+        categoryRecyclerView.setNestedScrollingEnabled(false);
         suggestionPager.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
         suggestionPager.setHasFixedSize(true);
         setUpViewPager();
