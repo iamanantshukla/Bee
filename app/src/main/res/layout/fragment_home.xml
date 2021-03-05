@@ -49,10 +49,10 @@
             app:layout_constraintTop_toBottomOf="@+id/categoryTextView" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/SuggestionRecyclerView"
+            android:id="@+id/CategoryRecyclerView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/CategoryTextView" />
@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/poppinsmedium"
             android:text="Explore Categories"
             android:textColor="@color/Font"
