@@ -44,6 +44,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.mViewHolder>{
     public int getItemCount() {
         return viewPagerModel.size();
     }
+
+
     public interface SelectedPager{
         void selectedpager(UserModel viewPagerModel);
     }

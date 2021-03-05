@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.devanant.bee.Database.TinyDB;
 import com.devanant.bee.R;
-import com.devanant.bee.UI.Home.UserSearchModel;
 
 import java.util.ArrayList;
 

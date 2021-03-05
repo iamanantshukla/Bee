@@ -15,7 +15,7 @@
         <activity android:name=".UI.Home.SearchUsersTags"></activity>
         <activity android:name=".UI.Home.HomeActivity" />
         <activity android:name=".UI.EditProfile"></activity>
-        <activity android:name=".UI.Home.HomeActivity" />
+
         <activity android:name=".UI.ChooseInterest" />
         <activity android:name=".UI.ChooseOrganisation" />
         <activity android:name=".UI.SplashScreen">

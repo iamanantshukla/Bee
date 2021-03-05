@@ -1,5 +1,6 @@
 package com.devanant.bee.UI.Home;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,8 +14,15 @@ import android.widget.ImageButton;
 
 import com.devanant.bee.R;
 import com.devanant.bee.UI.organisationAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +32,7 @@ public class SearchUsersTags extends AppCompatActivity implements AdapterUserTag
     private ImageButton searchbutton;
     private RecyclerView searchresults;
     private FirebaseFirestore fstore;
-    private List<UserSearchModel> userModel;
+    private List<UserModel> userModel;
     private AdapterUserTagSearch userAdapter;
     private FirebaseAuth mAuth;
     private String UserID;
@@ -33,14 +41,16 @@ public class SearchUsersTags extends AppCompatActivity implements AdapterUserTag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_users_tags);
         searchbar = (EditText) findViewById(R.id.searchBar);
-        searchbutton = (ImageButton)findViewById(R.id.searchButton);
+//        searchbutton = (ImageButton)findViewById(R.id.searchButton);
         searchresults = (RecyclerView)findViewById(R.id.searchResults);
         fstore=FirebaseFirestore.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
 
         userModel=new ArrayList<>();
-        userAdapter=new AdapterUserTagSearch(userModel, this);
+
+
+        userAdapter=new AdapterUserTagSearch(userModel,this);
         searchresults.setAdapter(userAdapter);
 
         searchresults.hasFixedSize();
@@ -54,18 +64,69 @@ public class SearchUsersTags extends AppCompatActivity implements AdapterUserTag
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String searchKeyword = searchbar.getText().toString();
+                if (searchKeyword.equals("")){
+                    fstore.collection("Users")
+                            .limit(10).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                            userModel.clear();
+                            for (QueryDocumentSnapshot doc : value) {
+
+                                if(doc.getId().equals(mAuth.getCurrentUser().getUid())){
+                                    Log.i("SameUser","Sameuser");
+                                }
+
+                                else{
+                                    Log.i("searchCheck", "onEvent:" + value.size());
+
+                                    UserModel set = doc.toObject(UserModel.class);
+                                    userModel.add(set);
+                                    Log.i("searchCheck", "onEvent: "+set.getUsername());
+                                    userAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    });
+                }
+                else{
+                    fstore.collection("Users").whereEqualTo("Username",searchKeyword)
+                            .limit(10).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                            userModel.clear();
+                            for (QueryDocumentSnapshot doc : value) {
+
+                                if(doc.getId().equals(mAuth.getCurrentUser().getUid())){
+                                    Log.i("SameUser","Sameuser");
+                                }
+
+                                else{
+                                    Log.i("searchCheck", "onEvent:" + value.size());
+
+                                    UserModel set = doc.toObject(UserModel.class);
+                                    userModel.add(set);
+                                    Log.i("searchCheck", "onEvent: "+set.getUsername());
+                                    userAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    });
+                }
 
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
+                String searchKeyword = editable.toString();
                 Log.d("SearchUser", "afterTextChanged: "+editable.toString());
+
             }
         });
     }
 
     @Override
-    public void selectedItem(UserSearchModel userModel) {
-        Log.i("sentIntent", "selectedItem: " + userModel.UserID);
+    public void selectedItem(UserModel userModel) {
+        Log.i("sentIntent", "selectedItem: " + userModel.getUsername());
     }
 }

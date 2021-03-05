@@ -1,5 +1,6 @@
 package com.devanant.bee.UI.Home;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.devanant.bee.Database.TinyDB;
@@ -27,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
-
+    private ImageButton searchbtn;
     private FirebaseFirestore fstore;
     private List<UserModel> userModels;
     private UserAdapter userAdapter;
@@ -40,12 +42,15 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         fstore=FirebaseFirestore.getInstance();
+
         tinyDB=new TinyDB(getContext());
         userModels=new ArrayList<>();
         interest=new ArrayList<>();
         mAuth=FirebaseAuth.getInstance();
+
 
     }
 
@@ -55,6 +60,7 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         interest=tinyDB.getListString("UserInterest");
+
         fstore.collection("Users").whereArrayContainsAny("Interest",interest).limit(5).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -78,11 +84,22 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
         });
 
         View root=inflater.inflate(R.layout.fragment_home, container, false);
+        searchbtn = root.findViewById(R.id.searchOnHome);
         suggestionPager=root.findViewById(R.id.SuggestionViewPager);
         suggestionPager.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
         suggestionPager.setHasFixedSize(true);
         setUpViewPager();
+
+        searchbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i= new Intent(getActivity(),SearchUsersTags.class);
+                startActivity(i);
+            }
+        });
         return root;
+
+
     }
 
     private void setUpViewPager() {

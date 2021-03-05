@@ -19,10 +19,10 @@ public class AdapterUserTagSearch extends RecyclerView.Adapter<AdapterUserTagSea
 
 
 
-    private List<UserSearchModel> userList;
+    private List<UserModel> userList;
     private SelectedItem selectedItem;
 
-    public AdapterUserTagSearch(List<UserSearchModel> userList, SelectedItem selectedItem) {
+    public AdapterUserTagSearch(List<UserModel> userList, SelectedItem selectedItem) {
         this.userList = userList;
         this.selectedItem = selectedItem;
     }
@@ -36,10 +36,10 @@ public class AdapterUserTagSearch extends RecyclerView.Adapter<AdapterUserTagSea
 
     @Override
     public void onBindViewHolder(@NonNull mViewHolder holder, int position) {
-            holder.setDetails(userList.get(position).UserName,userList.get(position).ProfileImage);
+            holder.setDetails(userList.get(position).getUsername(),userList.get(position).getProfilePic());
     }
     public interface SelectedItem{
-        void selectedItem(UserSearchModel userModel);
+        void selectedItem(UserModel userModel);
     }
     @Override
     public int getItemCount() {
