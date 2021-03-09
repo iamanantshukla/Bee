@@ -219,14 +219,14 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
         GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(),2,GridLayoutManager.VERTICAL,false);
         categoryRecyclerView.setLayoutManager(gridLayoutManager);
 
-        int spanCount = 2; // 3 columns
+        int spanCount = 3; // 3 columns
         int spacing = 50; // 50px
         boolean includeEdge = true;
         categoryRecyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
 
         categoryRecyclerView.setHasFixedSize(true);
         categoryRecyclerView.setAdapter(categoryAdapter);
-        categoryRecyclerView.setNestedScrollingEnabled(false);
+        //categoryRecyclerView.setNestedScrollingEnabled(false);
         suggestionPager.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
         suggestionPager.setHasFixedSize(true);
         setUpViewPager();

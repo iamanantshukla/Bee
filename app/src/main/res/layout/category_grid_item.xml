@@ -49,7 +49,7 @@
                 android:fontFamily="@font/poppinsmedium"
                 android:text="Iceland"
                 android:textColor="@color/Font"
-                android:textSize="18sp"
+                android:textSize="@dimen/_14ssp"
                 app:layout_constraintBottom_toBottomOf="@+id/categoryImage"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
