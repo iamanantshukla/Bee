@@ -8,6 +8,7 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -18,13 +19,22 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devanant.bee.Database.TinyDB;
 import com.devanant.bee.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthCredential;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.hbb20.CountryCodePicker;
@@ -36,7 +46,7 @@ public class PhoneLogin extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private TextView editPhone, editOTP,state,logo_name,group;
     private LinearLayout emailLinear;
-    private Button button;
+    private Button button,skip;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private String mPhone;
     private View parentLayout;
@@ -45,6 +55,9 @@ public class PhoneLogin extends AppCompatActivity {
     private String verificationId;
     private PhoneAuthProvider.ForceResendingToken token;
     private Boolean verificationInProgress=false;
+    private int METHOD=0;
+    private AuthCredential authCredential;
+    private TinyDB tinyDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +71,8 @@ public class PhoneLogin extends AppCompatActivity {
                     .setInterpolator(new DecelerateInterpolator());
         }
 
+        tinyDB=new TinyDB(getApplicationContext());
+
         parentLayout = findViewById(android.R.id.content);
         editPhone=findViewById(R.id.EditPhone);
         editOTP=findViewById(R.id.EditOTP);
@@ -66,63 +81,77 @@ public class PhoneLogin extends AppCompatActivity {
         codePicker=findViewById(R.id.textView_code);
         progressBar=findViewById(R.id.progressBar);
         logo_name=findViewById(R.id.logo_name);
+        skip=findViewById(R.id.btnSkip);
+
+        METHOD=getIntent().getIntExtra("Method",0);
+        if(METHOD==0){
+            authCredential= EmailAuthProvider.getCredential(getIntent().getStringExtra("email"), getIntent().getStringExtra("password"));
+        }else{
+            authCredential= GoogleAuthProvider.getCredential(getIntent().getStringExtra("GoogleIDToken"),null);
+        }
+
+        skip.setOnClickListener(v -> {
+            Intent i=new Intent(PhoneLogin.this, CreateProfile.class);
+            startActivity(i);
+        });
 
         progressBar.setVisibility(View.INVISIBLE);
 
         //FirebaseAuth initialize
         mAuth= FirebaseAuth.getInstance();
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //phone get number
-                mPhone=editPhone.getText().toString();
-                if(!verificationInProgress){
-                    if(mPhone.length() == 10){
+        button.setOnClickListener(v -> {
+            //phone get number
+            mPhone=editPhone.getText().toString();
+            if(!verificationInProgress){
+                if(mPhone.length() == 10){
 
-                        String phoneNo = "+"+codePicker.getSelectedCountryCode()+mPhone;
-                        progressBar.setVisibility(View.VISIBLE);
-                        state.setText("Sending OTP");
-                        state.setVisibility(View.VISIBLE);
-                        requestOTP(phoneNo);
+                    String phoneNo = "+"+codePicker.getSelectedCountryCode()+mPhone;
+                    progressBar.setVisibility(View.VISIBLE);
+                    state.setText("Sending OTP");
+                    state.setVisibility(View.VISIBLE);
+                    requestOTP(phoneNo);
 
-                    }else
-                    {
-                        editPhone.setError("Phone number is not Valid");
-                    }
+                }else
+                {
+                    editPhone.setError("Phone number is not Valid");
+                }
+            }else {
+                String userOTP = editOTP.getText().toString();
+
+                if(userOTP.length() == 6){
+
+                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId,userOTP);
+                    linkCredential(credential);
+
                 }else {
-                    String userOTP = editOTP.getText().toString();
-
-                    if(!userOTP.isEmpty() && userOTP.length() == 6){
-
-                        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId,userOTP);
-                        verifyAuth(credential);
-
-                    }else {
-                        editOTP.setError("Valid OTP is required");
-                    }
+                    editOTP.setError("Valid OTP is required");
                 }
             }
         });
 
     }
 
-    private void verifyAuth(PhoneAuthCredential credential) {
+    public void linkCredential(AuthCredential credential) {
+        mAuth.getCurrentUser().linkWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            tinyDB.putString("PhoneNumber",mPhone);
+                            Log.d("LinkCredential", "linkWithCredential:success");
+                            FirebaseUser user = task.getResult().getUser();
+                            Snackbar.make(parentLayout, "Authentication Successful", Snackbar.LENGTH_SHORT).show();
+                            Intent i=new Intent(PhoneLogin.this, CreateProfile.class);
+                            startActivity(i);
 
-        mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    Snackbar.make(parentLayout, "Authentication Successful", Snackbar.LENGTH_SHORT).show();
-
-                }else {
-                    progressBar.setVisibility(View.GONE);
-                    state.setVisibility(View.GONE);
-                    Toast.makeText(PhoneLogin.this, "Can not Verify phone and Create Account.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
+                        } else {
+                            Snackbar.make(parentLayout, "Authentication Failed", Snackbar.LENGTH_SHORT).show();
+                            Log.w("LinkCredential", "linkWithCredential:failure", task.getException());
+                            Toast.makeText(PhoneLogin.this, "Failed to merge" + task.getException().toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private void requestOTP(String phoneNo) {

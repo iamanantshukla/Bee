@@ -7,7 +7,6 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.transition.Fade;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.devanant.bee.Firebase.FirebaseAuthentication;
 import com.devanant.bee.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -32,7 +30,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 public class EmailLogin extends AppCompatActivity {
@@ -75,6 +72,7 @@ public class EmailLogin extends AppCompatActivity {
         footer=findViewById(R.id.textStatus);
         emailLayout=findViewById(R.id.linearEmail);
         phoneLayout=findViewById(R.id.linearPhone);
+
 
         footer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,17 +131,18 @@ public class EmailLogin extends AppCompatActivity {
                             mAuth.signInWithEmailAndPassword(Email,Password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                 @Override
                                 public void onSuccess(AuthResult authResult) {
+
+
                                     if(mAuth.getCurrentUser().isEmailVerified()){
-                                        if(mAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
-                                            Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
-                                            Intent i = new Intent(EmailLogin.this, PhoneLogin.class);
-                                            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(EmailLogin.this,
-                                                    new Pair<View, String>(emailLayout, "emailTransition"),
-                                                    new Pair<View, String>(phoneLayout, "phoneTransition"));
-                                            startActivity(i, options.toBundle());
-                                        }else{
-                                            //HomePage
-                                        }
+                                        Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+                                        Intent i = new Intent(EmailLogin.this, PhoneLogin.class);
+                                        i.putExtra("Method",0);
+                                        i.putExtra("email",Email);
+                                        i.putExtra("password", Password);
+                                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(EmailLogin.this,
+                                                new Pair<View, String>(emailLayout, "emailTransition"),
+                                                new Pair<View, String>(phoneLayout, "phoneTransition"));
+                                        startActivity(i, options.toBundle());
                                     }else{
                                         Toast.makeText(getApplicationContext(),"Verify your email", Toast.LENGTH_SHORT).show();
                                     }
@@ -206,6 +205,8 @@ public class EmailLogin extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Snackbar.make(parentLayout,"Login Successful",Snackbar.LENGTH_SHORT);
                             Intent i=new Intent(EmailLogin.this, PhoneLogin.class);
+                            i.putExtra("Method",1);
+                            i.putExtra("GoogleIDToken",idToken);
                             startActivity(i);
 
                         } else {
