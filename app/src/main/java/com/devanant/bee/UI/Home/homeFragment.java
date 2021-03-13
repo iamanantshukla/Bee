@@ -1,9 +1,6 @@
 package com.devanant.bee.UI.Home;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
+
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -18,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.devanant.bee.Database.TinyDB;
@@ -43,7 +41,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
 
-    private static final String TAG = "HomeFragment";
     private FirebaseFirestore fstore;
     private List<UserModel> userModels;
     private UserAdapter userAdapter;
@@ -61,8 +58,10 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         fstore=FirebaseFirestore.getInstance();
+
         tinyDB=new TinyDB(getContext());
         userModels=new ArrayList<>();
         interest=new ArrayList<>();
@@ -78,44 +77,7 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
         byte[] b = baos.toByteArray();
         String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
 
-        Log.d("Image Log:", imageEncoded);
-        return imageEncoded;
-    }
 
-    private void loadProfileImage() {
-        String ImageEncoded=tinyDB.getString("ProfilePic");
-        if(ImageEncoded.isEmpty()) {
-            Log.i(TAG, "loadProfileImage: Empty");
-            StorageReference profileRef = storageReference.child("users/" + mAuth.getCurrentUser().getUid() + "/profile.jpg");
-            profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Picasso.get().load(uri).into(circleImageView);
-                    Picasso.get().load(uri).into(new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            Log.i(TAG, "onBitmapLoaded: Saved to tinyDB");
-                            tinyDB.putString("ProfilePic",encodeTobase64(bitmap));
-                        }
-
-                        @Override
-                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                            Log.i(TAG, "onBitmapFailed: "+e.getMessage());
-                        }
-
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                        }
-                    });
-                }
-            });
-        }else{
-            Log.i(TAG, "loadProfileImage: Found");
-            byte[] decodedByte = Base64.decode(ImageEncoded, 0);
-            Bitmap image= BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
-            circleImageView.setImageBitmap(image);
-        }
     }
 
     @Nullable
@@ -124,6 +86,7 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         interest=tinyDB.getListString("UserInterest");
+
         fstore.collection("Users").whereArrayContainsAny("Interest",interest).limit(5).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -174,6 +137,7 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
         });
 
         View root=inflater.inflate(R.layout.fragment_home, container, false);
+        searchbtn = root.findViewById(R.id.searchOnHome);
         suggestionPager=root.findViewById(R.id.SuggestionViewPager);
         categoryRecyclerView=root.findViewById(R.id.CategoryRecyclerView);
         circleImageView=root.findViewById(R.id.circleImageView);
@@ -230,7 +194,17 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
         suggestionPager.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
         suggestionPager.setHasFixedSize(true);
         setUpViewPager();
+
+        searchbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i= new Intent(getActivity(),SearchUsersTags.class);
+                startActivity(i);
+            }
+        });
         return root;
+
+
     }
 
     private void setUpViewPager() {
