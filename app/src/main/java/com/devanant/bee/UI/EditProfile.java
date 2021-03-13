@@ -210,9 +210,9 @@ public class EditProfile extends AppCompatActivity {
             File actualImage=new File(resultUri.getPath());
             try {
                 compressedImageFile = new Compressor(this)
-                        .setMaxWidth(1080)
-                        .setMaxHeight(1920)
-                        .setQuality(70)
+                        .setMaxWidth(720)
+                        .setMaxHeight(1280)
+                        .setQuality(30)
                         .compressToBitmap(actualImage);
             } catch (IOException e) {
                 e.printStackTrace();
