@@ -143,7 +143,7 @@
             android:paddingBottom="4dp"
             android:text="Dance"
             android:textColor="@color/Dark"
-            android:textSize="@dimen/_12ssp" />
+            android:textSize="@dimen/_11ssp" />
 
         <TextView
             android:id="@+id/profileSkill2"
@@ -159,7 +159,7 @@
             android:paddingBottom="4dp"
             android:text="Videography"
             android:textColor="@color/Dark"
-            android:textSize="@dimen/_12ssp" />
+            android:textSize="@dimen/_11ssp" />
 
         <TextView
             android:id="@+id/profileSkill3"
@@ -175,7 +175,7 @@
             android:paddingBottom="4dp"
             android:text="Photography"
             android:textColor="@color/Dark"
-            android:textSize="@dimen/_12ssp" />
+            android:textSize="@dimen/_11ssp" />
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

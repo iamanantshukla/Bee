@@ -1,5 +1,6 @@
 package com.devanant.bee.UI.Home;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import com.devanant.bee.Database.TinyDB;
 import com.devanant.bee.R;
 import com.devanant.bee.UI.GridSpacingItemDecoration;
+import com.devanant.bee.UI.OtherProfile;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.EventListener;
@@ -129,41 +131,13 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 if(!value.isEmpty())
                 {
-                    for(QueryDocumentSnapshot doc:value)
-                    {
-                        //if(!doc.getId().equals(mAuth.getCurrentUser().getUid())){
-                        UserModel model=doc.toObject(UserModel.class);
+                    for(QueryDocumentSnapshot doc:value) {
+                        if(!doc.getId().equals(mAuth.getCurrentUser().getUid())){
+                        UserModel model = doc.toObject(UserModel.class);
                         userModels.add(model);
                         userAdapter.notifyDataSetChanged();
-                        Log.i("HomeFragmentSuggestion",model.getUsername());
-                        //}
-                    }
-                    for(QueryDocumentSnapshot doc:value)
-                    {
-                        //if(!doc.getId().equals(mAuth.getCurrentUser().getUid())){
-                        UserModel model=doc.toObject(UserModel.class);
-                        userModels.add(model);
-                        userAdapter.notifyDataSetChanged();
-                        Log.i("HomeFragmentSuggestion",model.getUsername());
-                        //}
-                    }
-                    for(QueryDocumentSnapshot doc:value)
-                    {
-                        //if(!doc.getId().equals(mAuth.getCurrentUser().getUid())){
-                        UserModel model=doc.toObject(UserModel.class);
-                        userModels.add(model);
-                        userAdapter.notifyDataSetChanged();
-                        Log.i("HomeFragmentSuggestion",model.getUsername());
-                        //}
-                    }
-                    for(QueryDocumentSnapshot doc:value)
-                    {
-                        //if(!doc.getId().equals(mAuth.getCurrentUser().getUid())){
-                        UserModel model=doc.toObject(UserModel.class);
-                        userModels.add(model);
-                        userAdapter.notifyDataSetChanged();
-                        Log.i("HomeFragmentSuggestion",model.getUsername());
-                        //}
+                        Log.i("HomeFragmentSuggestion", model.getUsername());
+                        }
                     }
                 }
                 else{
@@ -241,6 +215,8 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
 
     @Override
     public void selectedpager(UserModel viewPagerModel) {
-
+        Intent i=new Intent(getActivity(), OtherProfile.class);
+        i.putExtra("ProfileModel", viewPagerModel);
+        startActivity(i);
     }
 }
