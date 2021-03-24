@@ -139,6 +139,22 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
                         Log.i("HomeFragmentSuggestion", model.getUsername());
                         }
                     }
+                    for(QueryDocumentSnapshot doc:value) {
+                        if(!doc.getId().equals(mAuth.getCurrentUser().getUid())){
+                            UserModel model = doc.toObject(UserModel.class);
+                            userModels.add(model);
+                            userAdapter.notifyDataSetChanged();
+                            Log.i("HomeFragmentSuggestion", model.getUsername());
+                        }
+                    }
+                    for(QueryDocumentSnapshot doc:value) {
+                        if(!doc.getId().equals(mAuth.getCurrentUser().getUid())){
+                            UserModel model = doc.toObject(UserModel.class);
+                            userModels.add(model);
+                            userAdapter.notifyDataSetChanged();
+                            Log.i("HomeFragmentSuggestion", model.getUsername());
+                        }
+                    }
                 }
                 else{
                     Log.i("HomeFragmentSuggestion","Empty"+interest.toString());
