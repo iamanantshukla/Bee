@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import id.zelory.compressor.Compressor;
+//import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
 

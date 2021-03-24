@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import com.devanant.bee.Database.TinyDB;
 import com.devanant.bee.R;
-import com.google.firebase.internal.InternalTokenProvider;
 
 import java.util.ArrayList;
 
@@ -77,9 +75,12 @@ public class ChooseOrganisation extends AppCompatActivity implements organisatio
         adapter.updateList(temp);
     }
 
-    @Override
-    public void selectedItem(String organisation) {
-        tinyDB.putString("Organisation", organisation);
-        finish();
-    }
+
+
+        @Override
+        public void selectedItem(String organisation) {
+            tinyDB.putString("Organisation", organisation);
+            finish();
+        }
+
 }
