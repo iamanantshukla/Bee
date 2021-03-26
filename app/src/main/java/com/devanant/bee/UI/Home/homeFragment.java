@@ -1,5 +1,6 @@
 package com.devanant.bee.UI.Home;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,16 +15,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.devanant.bee.Database.TinyDB;
 import com.devanant.bee.R;
+import com.devanant.bee.UI.CreateProfile;
+import com.devanant.bee.UI.EmailLogin;
 import com.devanant.bee.UI.GridSpacingItemDecoration;
+import com.devanant.bee.UI.InterestBrowse;
+import com.devanant.bee.UI.LoginHome;
 import com.devanant.bee.UI.OtherProfile;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,7 +52,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
+public class homeFragment extends Fragment implements UserAdapter.SelectedPager, CategoryAdapter.SelectedViewPager{
 
     private static final String TAG = "HomeFragment";
     private FirebaseFirestore fstore;
@@ -59,6 +68,7 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
     private CategoryAdapter categoryAdapter;
     private CircleImageView circleImageView;
     private StorageReference storageReference;
+    private TextView userSearch;
 
 
     @Override
@@ -166,25 +176,33 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
         View root=inflater.inflate(R.layout.fragment_home, container, false);
         suggestionPager=root.findViewById(R.id.SuggestionViewPager);
         categoryRecyclerView=root.findViewById(R.id.CategoryRecyclerView);
-        circleImageView=root.findViewById(R.id.circleImageView);
-        loadProfileImage();
+        userSearch=root.findViewById(R.id.userSearch);
+        userSearch.setOnClickListener(v->{
+            Intent i=new Intent(getActivity(), SearchUsersTags.class);
+            ActivityOptions options= ActivityOptions.makeSceneTransitionAnimation(getActivity(),
+                    new Pair<>(userSearch, "SearchBar"));
+            startActivity(i, options.toBundle());
+        });
+
+        //circleImageView=root.findViewById(R.id.circleImageView);
+        //loadProfileImage();
 
 
 
         titles=new ArrayList<>();
         mImages=new ArrayList<>();
-        categoryAdapter=new CategoryAdapter(getContext(),titles,mImages);
+        categoryAdapter=new CategoryAdapter(getContext(),titles,mImages,this);
         mImages.add(R.drawable.dance);
         mImages.add(R.drawable.music);
         mImages.add(R.drawable.photography);
         mImages.add(R.drawable.design);
-        mImages.add(R.drawable.video);
+        mImages.add(R.drawable.tvshows);
         mImages.add(R.drawable.dramatics);
         mImages.add(R.drawable.reading);
         mImages.add(R.drawable.dance);
         mImages.add(R.drawable.music);
         mImages.add(R.drawable.photography);
-        mImages.add(R.drawable.video);
+        mImages.add(R.drawable.tvshows);
         mImages.add(R.drawable.dramatics);
         mImages.add(R.drawable.reading);
         mImages.add(R.drawable.dance);
@@ -195,7 +213,7 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
         titles.add("Music");
         titles.add("Photography");
         titles.add("Designing");
-        titles.add("Videography");
+        titles.add("TV Shows");
         titles.add("Dramatics");
         titles.add("Reading");
         titles.add("Dance");
@@ -206,13 +224,13 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
         titles.add("Dramatics");
         titles.add("Reading");
 
-        GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(),2,GridLayoutManager.VERTICAL,false);
-        categoryRecyclerView.setLayoutManager(gridLayoutManager);
+        //GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(),2,GridLayoutManager.VERTICAL,false);
+        categoryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         int spanCount = 3; // 3 columns
         int spacing = 50; // 50px
         boolean includeEdge = true;
-        categoryRecyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+       // categoryRecyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
 
         categoryRecyclerView.setHasFixedSize(true);
         categoryRecyclerView.setAdapter(categoryAdapter);
@@ -233,6 +251,13 @@ public class homeFragment extends Fragment implements UserAdapter.SelectedPager{
     public void selectedpager(UserModel viewPagerModel) {
         Intent i=new Intent(getActivity(), OtherProfile.class);
         i.putExtra("ProfileModel", viewPagerModel);
+        startActivity(i);
+    }
+
+    @Override
+    public void selectedViewpager(String title) {
+        Intent i=new Intent(getActivity(), InterestBrowse.class);
+        i.putExtra("Interest", title);
         startActivity(i);
     }
 }

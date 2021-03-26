@@ -29,7 +29,7 @@ public class OtherProfile extends AppCompatActivity {
         setContentView(R.layout.activity_other_profile);
         TextName=findViewById(R.id.oUsername);
         TextBio=findViewById(R.id.oBioText);
-        profilePic=findViewById(R.id.oProImage);
+        //profilePic=findViewById(R.id.oProImage);
         TextSkill1=findViewById(R.id.oprofileSkill1);
         TextSkill2=findViewById(R.id.oprofileSkill2);
         TextSkill3=findViewById(R.id.oprofileSkill3);
@@ -52,7 +52,7 @@ public class OtherProfile extends AppCompatActivity {
             }
         }
         String url=userModel.getProfilePic();
-        Picasso.get().load(url).into(profilePic);
+        //Picasso.get().load(url).into(profilePic);
 
     }
 

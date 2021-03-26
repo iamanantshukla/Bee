@@ -9,13 +9,15 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.Bee">
-        <activity android:name="com.canhub.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
-        <activity android:name=".UI.OtherProfile"></activity>
+        <activity android:name=".UI.InterestBrowse"></activity>
+        <activity
+            android:name="com.canhub.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+        <activity android:name=".UI.OtherProfile" />
         <activity android:name=".UI.EditProfile" />
         <activity android:name=".UI.Home.HomeActivity" />
         <activity android:name=".UI.ChooseInterest" />
@@ -31,7 +33,7 @@
         <activity android:name=".UI.PhoneLogin" />
         <activity android:name=".UI.EmailLogin" />
         <activity android:name=".UI.LoginHome" />
-
+        <activity android:name=".UI.Home.SearchUsersTags" />
     </application>
 
 </manifest>

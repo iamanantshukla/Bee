@@ -56,7 +56,7 @@ public class profileFragment extends Fragment {
     //private String Name,Org,Bio,Interest,Instagram,facebook;
     private TextView TextName, TextOrg, TextBio, TextSkill1, TextSkill2, TextSkill3;
     private ImageView ImageInsta,ImageFB;
-    private CircleImageView profilePic;
+    private ImageView profilePic;
     private ArrayList<String> Interests;
     private TinyDB tinyDB;
     private Map<String, Object> map;
