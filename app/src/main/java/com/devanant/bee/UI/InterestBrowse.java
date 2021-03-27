@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.devanant.bee.Database.TinyDB;
 import com.devanant.bee.R;
 import com.devanant.bee.UI.ChatSocket.AddUserActivity;
+import com.devanant.bee.UI.ChatSocket.MainActivity;
 import com.devanant.bee.UI.Home.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -95,8 +96,10 @@ public class InterestBrowse extends AppCompatActivity implements BrowseInterestA
         joinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i=new Intent(InterestBrowse.this, AddUserActivity.class);
-                //i.putExtra("username", )
+                Intent i=new Intent(InterestBrowse.this, MainActivity.class);
+                i.putExtra("username", map.get("Username").toString());
+                i.putExtra("UserID", mAuth.getCurrentUser().getUid());
+                i.putExtra("Interest", Interest);
                 startActivity(i);
             }
         });
