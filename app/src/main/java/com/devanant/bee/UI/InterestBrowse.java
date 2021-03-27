@@ -9,15 +9,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devanant.bee.Database.TinyDB;
 import com.devanant.bee.R;
+import com.devanant.bee.UI.ChatSocket.AddUserActivity;
 import com.devanant.bee.UI.Home.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -25,7 +29,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InterestBrowse extends AppCompatActivity implements BrowseInterestAdapter.SelectedPager{
 
@@ -33,6 +39,7 @@ public class InterestBrowse extends AppCompatActivity implements BrowseInterestA
     private String Interest;
     private List<UserModel> userModels;
     private FirebaseFirestore firestore;
+    private FirebaseAuth mAuth;
     private DocumentSnapshot lastSnapshot;
     private BrowseInterestAdapter adapter;
     private ViewPager2 BrowseViewPager;
@@ -42,6 +49,8 @@ public class InterestBrowse extends AppCompatActivity implements BrowseInterestA
     private UserModel userModel;
     private ImageView blurBg;
     private ProgressBar loading;
+    private TinyDB tinyDB;
+    private Map<String, Object> map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +64,24 @@ public class InterestBrowse extends AppCompatActivity implements BrowseInterestA
         TextSkill3=findViewById(R.id.bprofileSkill3);
         loading=findViewById(R.id.browseLoading);
         blurBg=findViewById(R.id.blurBackground);
+        mAuth=FirebaseAuth.getInstance();
+
+        tinyDB=new TinyDB(this);
+        map=new HashMap<>();
+        map=tinyDB.getObject("UserProfile",map.getClass());
+        if(map.isEmpty()){
+            firestore.collection("Users").document(mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot snapshot) {
+                    map=snapshot.getData();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.i(TAG, "onFailure: Failed to load");
+                }
+            });
+        }
 
         firestore=FirebaseFirestore.getInstance();
         Interest=getIntent().getStringExtra("Interest");
@@ -63,6 +90,16 @@ public class InterestBrowse extends AppCompatActivity implements BrowseInterestA
         userModels=new ArrayList<>();
         adapter=new BrowseInterestAdapter(userModels, this);
         BrowseViewPager.setAdapter(adapter);
+
+        Button joinBtn=findViewById(R.id.JoinChatBtn);
+        joinBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(InterestBrowse.this, AddUserActivity.class);
+                //i.putExtra("username", )
+                startActivity(i);
+            }
+        });
 
         Toast.makeText(getApplicationContext(), Interest,Toast.LENGTH_SHORT).show();
 

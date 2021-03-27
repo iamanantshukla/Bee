@@ -22,6 +22,8 @@
         <activity android:name=".UI.Home.HomeActivity" />
         <activity android:name=".UI.ChooseInterest" />
         <activity android:name=".UI.ChooseOrganisation" />
+        <activity android:name=".UI.ChatSocket.AddUserActivity" />
+        <activity android:name=".UI.ChatSocket.MainActivity" />
         <activity android:name=".UI.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
