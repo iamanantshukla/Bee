@@ -1,10 +1,13 @@
 package com.devanant.bee.UI;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,17 +20,17 @@ import android.widget.Toast;
 
 import com.devanant.bee.Database.TinyDB;
 import com.devanant.bee.R;
-import com.devanant.bee.UI.ChatSocket.AddUserActivity;
 import com.devanant.bee.UI.ChatSocket.MainActivity;
 import com.devanant.bee.UI.Home.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +55,7 @@ public class InterestBrowse extends AppCompatActivity implements BrowseInterestA
     private ProgressBar loading;
     private TinyDB tinyDB;
     private Map<String, Object> map;
+    private FloatingActionButton SCbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,7 @@ public class InterestBrowse extends AppCompatActivity implements BrowseInterestA
         loading=findViewById(R.id.browseLoading);
         blurBg=findViewById(R.id.blurBackground);
         mAuth=FirebaseAuth.getInstance();
+        SCbtn=findViewById(R.id.bSCbtn);
 
         tinyDB=new TinyDB(this);
         map=new HashMap<>();
@@ -98,6 +103,7 @@ public class InterestBrowse extends AppCompatActivity implements BrowseInterestA
             public void onClick(View v) {
                 Intent i=new Intent(InterestBrowse.this, MainActivity.class);
                 i.putExtra("username", map.get("Username").toString());
+                i.putExtra("College", map.get("Organisation").toString());
                 i.putExtra("UserID", mAuth.getCurrentUser().getUid());
                 i.putExtra("Interest", Interest);
                 startActivity(i);
@@ -124,7 +130,91 @@ public class InterestBrowse extends AppCompatActivity implements BrowseInterestA
 
         Log.i(TAG, "onCreate: "+userModels.toString());
 
+        SCbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean SC= (boolean) map.get("SecretCrush");
 
+                if(SC){
+                    FirebaseSecretCrushUpdate(map.get("UserID").toString(), userModel.getUserID());
+
+                }else{
+                    //already used
+                }
+            }
+        });
+
+
+    }
+
+    private void FirebaseSecretCrushUpdate(String myID, String userID) {
+        String College=userModel.getOrganisation();
+        firestore.collection("Data").document(College)
+                .collection("SecretCrush").document(userID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    String crushList = (String) snapshot.get("CrushList");
+                    if (crushList.contains(myID)) {
+                        map.put("SecretCrush", false);
+                        tinyDB.putObject("UserProfile", map);
+                        CrushMatch();
+                    } else {
+                        addToMyCrush(myID, userID);
+                    }
+                }else{
+                    addToMyCrush(myID, userID);
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: "+e.getMessage());
+            }
+        });
+    }
+
+    private void CrushMatch() {
+        AlertDialog.Builder alert=new AlertDialog.Builder(InterestBrowse.this);
+        View view=getLayoutInflater().inflate(R.layout.dialog_match,null);
+        alert.setView(view);
+        AlertDialog show=alert.show();
+        alert.setCancelable(true);
+        show.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        updateFirebase();
+    }
+
+    private void updateFirebase() {
+        firestore.collection("Users").document(mAuth.getCurrentUser().getUid())
+                .update("SecretCrush", false).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                //
+            }
+        });
+    }
+
+    private void addToMyCrush(String myID, String userID) {
+        Map<String, String> Smap;
+        Smap=new HashMap<>();
+        Smap.put("CrushList", userID);
+        String College=userModel.getOrganisation();
+        firestore.collection("Data").document(College)
+                .collection("SecretCrush").document(myID).set(Smap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getApplicationContext(), "Added to your crush list", Toast.LENGTH_SHORT).show();
+                        map.put("SecretCrush", false);
+                        tinyDB.putObject("UserProfile", map);
+                        updateFirebase();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: "+e.getMessage());
+            }
+        });
     }
 
     private void setupView() {

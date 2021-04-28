@@ -55,7 +55,7 @@ public class profileFragment extends Fragment {
     private static final String TAG ="Profile_LOG" ;
     //private String Name,Org,Bio,Interest,Instagram,facebook;
     private TextView TextName, TextOrg, TextBio, TextSkill1, TextSkill2, TextSkill3;
-    private ImageView ImageInsta,ImageFB;
+    private ImageView ImageInsta,ImageFB,FRbtn;
     private ImageView profilePic;
     private ArrayList<String> Interests;
     private TinyDB tinyDB;
@@ -77,6 +77,7 @@ public class profileFragment extends Fragment {
         firestore= FirebaseFirestore.getInstance();
         mAuth=FirebaseAuth.getInstance();
         storageReference= FirebaseStorage.getInstance().getReference();
+
 
         map=new HashMap<>();
         map=tinyDB.getObject("UserProfile",map.getClass());
@@ -160,6 +161,14 @@ public class profileFragment extends Fragment {
         ImageFB=view.findViewById(R.id.profFacebook);
         profilePic=view.findViewById(R.id.profileImage);
         BtnEditProf=view.findViewById(R.id.BtnEditProf);
+        FRbtn=view.findViewById(R.id.pFRbtn);
+
+        FRbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         //getting current userID
         UserID=mAuth.getCurrentUser().getUid();

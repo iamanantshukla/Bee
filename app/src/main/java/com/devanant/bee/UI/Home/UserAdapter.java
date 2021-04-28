@@ -1,5 +1,6 @@
 package com.devanant.bee.UI.Home;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devanant.bee.R;
@@ -72,7 +74,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.mViewHolder>{
         }
         public void setProfilePic(String url){
             ProfilePic=view.findViewById(R.id.pagerCoverImage);
-            Picasso.get().load(url).into(ProfilePic);
+            if(url.isEmpty()){
+                ProfilePic.setImageResource(R.drawable.profile);
+            }else {
+                Picasso.get().load(url).into(ProfilePic);
+            }
             Log.i("ProfileURL",url);
         }
 

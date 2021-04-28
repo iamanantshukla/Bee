@@ -37,6 +37,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -337,7 +338,6 @@ public class TinyDB {
     	}
     	return objects;
     }
-
 
 
     public <T> T getObject(String key, Class<T> classOfT){

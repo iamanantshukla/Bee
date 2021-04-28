@@ -22,9 +22,11 @@ import com.devanant.bee.R;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 import com.github.nkzawa.emitter.Emitter;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -35,12 +37,13 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
 
     private EditText textField;
+    private TextView typingText;
     private ImageButton sendButton;
 
     public static final String TAG  = "MainActivity";
     public static String uniqueId;
 
-    private String Username;
+    private String Username, Interest;
 
     private Boolean hasConnection = false;
 
@@ -50,11 +53,12 @@ public class MainActivity extends AppCompatActivity {
     private Thread thread2;
     private boolean startTyping = false;
     private int time = 2;
+    private String GROUP;
 
     private Socket mSocket;
     {
         try {
-            mSocket = IO.socket("https://bee-server-new.herokuapp.com");
+            mSocket = IO.socket("https://waveserver.herokuapp.com/");
         } catch (URISyntaxException e) {}
     }
 
@@ -80,6 +84,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Username = getIntent().getStringExtra("username");
+        TextView groupName=findViewById(R.id.GroupName);
+        Interest=getIntent().getStringExtra("Interest");
+        GROUP=Interest+getIntent().getStringExtra("College");
+        groupName.setText(Interest);
+        typingText=findViewById(R.id.typingText);
 
         uniqueId = UUID.randomUUID().toString();
         Log.i(TAG, "onCreate: " + uniqueId);
@@ -92,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
         }else {
             mSocket.connect();
+            mSocket.emit("joinRoom", GROUP);
             mSocket.on("connect user", onNewUser);
             mSocket.on("chat message", onNewMessage);
             mSocket.on("on typing", onTyping);
@@ -99,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             JSONObject userId = new JSONObject();
             try {
                 userId.put("username", Username + " Connected");
-                mSocket.emit("connect user", userId);
+                mSocket.emit("connect user", userId, GROUP);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -142,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                     onTyping.put("typing", true);
                     onTyping.put("username", Username);
                     onTyping.put("uniqueId", uniqueId);
-                    mSocket.emit("on typing", onTyping);
+                    mSocket.emit("on typing", onTyping, GROUP);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -239,8 +249,10 @@ public class MainActivity extends AppCompatActivity {
 
                         if(id.equals(uniqueId)){
                             typingOrNot = false;
+                            typingText.setText("");
                         }else {
-                            setTitle(userName);
+                            //setTitle(userName);
+                            typingText.setText(userName);
                         }
 
                         if(typingOrNot){
@@ -272,6 +284,8 @@ public class MainActivity extends AppCompatActivity {
                                 time = 2;
                             }
 
+                        }else{
+                            typingText.setText("");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -301,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.i(TAG, "sendMessage: 1"+ mSocket.emit("chat message", jsonObject));
+        Log.i(TAG, "sendMessage: 1"+ mSocket.emit("chat message", jsonObject, GROUP));
     }
 
     @Override
@@ -314,7 +328,8 @@ public class MainActivity extends AppCompatActivity {
             JSONObject userId = new JSONObject();
             try {
                 userId.put("username", Username + " DisConnected");
-                mSocket.emit("connect user", userId);
+                mSocket.emit("connect user", userId, GROUP);
+                //mSocket.emit("room", GROUP);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

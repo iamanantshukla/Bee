@@ -8,15 +8,15 @@
         android:icon="@drawable/ic_outline_home_24"
         app:cnb_textColor="@color/Font"
         app:cnb_iconColor="@color/Font"
-        app:cnb_backgroundColor="@color/Theme"/>
+        app:cnb_backgroundColor="@color/Secondary"/>
 
     <item
         android:id="@+id/nav_msg"
-        android:title="Message"
+        android:title="Confession"
         android:icon="@drawable/ic_outline_message_24"
         app:cnb_textColor="@color/Font"
         app:cnb_iconColor="@color/Font"
-        app:cnb_backgroundColor="@color/Theme"/>
+        app:cnb_backgroundColor="@color/Secondary"/>
 
     <item
         android:id="@+id/nav_profile"
@@ -24,7 +24,7 @@
         android:icon="@drawable/ic_outline_person_24"
         app:cnb_textColor="@color/Font"
         app:cnb_iconColor="@color/Font"
-        app:cnb_backgroundColor="@color/Theme"/>
+        app:cnb_backgroundColor="@color/Secondary"/>
 
 
 

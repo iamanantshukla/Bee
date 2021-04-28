@@ -209,6 +209,12 @@ public class EditProfile extends AppCompatActivity {
         nMap.put("Interest",Interests);
         nMap.put("PhoneNumber",map.get("PhoneNumber"));
         nMap.put("ProfilePic",ImageUri);
+        nMap.put("UserID", mAuth.getCurrentUser().getUid());
+        nMap.put("Friends", map.get("Friends"));
+        nMap.put("ReqSent", map.get("ReqSent"));
+        nMap.put("ReqReceived", map.get("ReqReceived"));
+        nMap.put("SecretCrush", true);
+
 
         Log.i("ProfileEdit", "EditUserProfile: "+nMap);
 

@@ -66,7 +66,11 @@ public class BrowseInterestAdapter extends RecyclerView.Adapter<BrowseInterestAd
         }
         public void setProfilePic(String url){
             ProfilePic=view.findViewById(R.id.bProImage);
-            Picasso.get().load(url).into(ProfilePic);
+            if(url.isEmpty()){
+                ProfilePic.setImageResource(R.drawable.profile);
+            }else {
+                Picasso.get().load(url).into(ProfilePic);
+            }
             Log.i("ProfileURL",url);
         }
 

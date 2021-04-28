@@ -16,7 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devanant.bee.Database.TinyDB;
 import com.devanant.bee.R;
+import com.devanant.bee.UI.Home.HomeActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -31,6 +33,11 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EmailLogin extends AppCompatActivity {
 
@@ -134,15 +141,33 @@ public class EmailLogin extends AppCompatActivity {
 
 
                                     if(mAuth.getCurrentUser().isEmailVerified()){
-                                        Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
-                                        Intent i = new Intent(EmailLogin.this, PhoneLogin.class);
-                                        i.putExtra("Method",0);
-                                        i.putExtra("email",Email);
-                                        i.putExtra("password", Password);
-                                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(EmailLogin.this,
-                                                new Pair<View, String>(emailLayout, "emailTransition"),
-                                                new Pair<View, String>(phoneLayout, "phoneTransition"));
-                                        startActivity(i, options.toBundle());
+                                        FirebaseFirestore firebaseFirestore=FirebaseFirestore.getInstance();
+                                        firebaseFirestore.collection("Users").document(mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot snapshot) {
+                                                if(snapshot.exists()){
+                                                    Map<String, Object> map=new HashMap<>();
+
+                                                    map=snapshot.getData();
+                                                    TinyDB tinyDB=new TinyDB(getApplicationContext());
+                                                    tinyDB.putObject("UserProfile", map);
+
+                                                    Intent i=new Intent(EmailLogin.this, HomeActivity.class);
+                                                    startActivity(i);
+                                                }else{
+
+                                                    Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+                                                    Intent i = new Intent(EmailLogin.this, PhoneLogin.class);
+                                                    i.putExtra("Method",0);
+                                                    i.putExtra("email",Email);
+                                                    i.putExtra("password", Password);
+                                                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(EmailLogin.this,
+                                                            new Pair<View, String>(emailLayout, "emailTransition"),
+                                                            new Pair<View, String>(phoneLayout, "phoneTransition"));
+                                                    startActivity(i, options.toBundle());
+                                                }
+                                            }
+                                        });
                                     }else{
                                         Toast.makeText(getApplicationContext(),"Verify your email", Toast.LENGTH_SHORT).show();
                                     }
@@ -203,11 +228,28 @@ public class EmailLogin extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Snackbar.make(parentLayout,"Login Successful",Snackbar.LENGTH_SHORT);
-                            Intent i=new Intent(EmailLogin.this, PhoneLogin.class);
-                            i.putExtra("Method",1);
-                            i.putExtra("GoogleIDToken",idToken);
-                            startActivity(i);
+                            FirebaseFirestore firebaseFirestore=FirebaseFirestore.getInstance();
+                            firebaseFirestore.collection("Users").document(mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        Map<String, Object> map=new HashMap<>();
+
+                                        map=snapshot.getData();
+                                        TinyDB tinyDB=new TinyDB(getApplicationContext());
+                                        tinyDB.putObject("UserProfile", map);
+
+                                        Intent i=new Intent(EmailLogin.this, HomeActivity.class);
+                                        startActivity(i);
+                                    }else{
+                                        Snackbar.make(parentLayout,"Login Successful",Snackbar.LENGTH_SHORT);
+                                        Intent i=new Intent(EmailLogin.this, PhoneLogin.class);
+                                        i.putExtra("Method",1);
+                                        i.putExtra("GoogleIDToken",idToken);
+                                        startActivity(i);
+                                    }
+                                }
+                            });
 
                         } else {
                             // If sign in fails, display a message to the user.

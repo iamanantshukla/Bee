@@ -1,5 +1,6 @@
 package com.devanant.bee.UI.Home;
 
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -12,8 +13,9 @@ public class UserModel implements Serializable {
     private String PhoneNumber;
     private String ProfilePic;
     private String Username;
+    private String UserID;
 
-    public UserModel(String bio, String facebook, String instagram, ArrayList<String> interest, String organisation, String phoneNumber, String ProfilePic, String Username) {
+    public UserModel(String UserID, String bio, String facebook, String instagram, ArrayList<String> interest, String organisation, String phoneNumber, String ProfilePic, String Username) {
         Bio = bio;
         Facebook = facebook;
         Instagram = instagram;
@@ -22,10 +24,19 @@ public class UserModel implements Serializable {
         PhoneNumber = phoneNumber;
         this.ProfilePic = ProfilePic;
         this.Username = Username;
+        this.UserID= UserID;
     }
     public UserModel()
     {
         //empty constructor
+    }
+
+    public String getUserID(){
+        return UserID;
+    }
+
+    public void setUserID(String userID){
+        UserID=userID;
     }
 
     public String getBio() {

@@ -8,16 +8,19 @@
     android:clipToPadding="false">
 
     <TextView
+        android:id="@+id/message_body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/message_body"
-        android:background="@drawable/my_message"
-        android:textColor="#fff"
-        android:padding="10dp"
-        android:elevation="2dp"
-        android:textSize="18sp"
         android:layout_alignParentRight="true"
+        android:background="@drawable/my_message"
+        android:elevation="2dp"
+        android:fontFamily="@font/sf_regualr"
+        android:paddingStart="12dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="4dp"
         android:text="Placeholder message"
-        />
+        android:textColor="@color/Primary"
+        android:textSize="18sp" />
 
 </RelativeLayout>

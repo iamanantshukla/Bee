@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.devanant.bee.Database.TinyDB;
 import com.devanant.bee.R;
+import com.devanant.bee.UI.Home.HomeActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -122,6 +123,20 @@ public class CreateProfile extends AppCompatActivity {
     }
 
     private void createProfile() {
+        ArrayList<Map<String, Object>> Friends=new ArrayList<>();
+        Map<String, Object> fMap=new HashMap<>();
+        fMap.put("UID", mAuth.getCurrentUser().getUid());
+        fMap.put("username", Username);
+        fMap.put("profilePic", "");
+
+        Friends.add(fMap);
+
+        ArrayList<String> ReqSent=new ArrayList<>();
+        ReqSent.add("DefaultUser");
+
+        ArrayList<String> ReqReceived=new ArrayList<>();
+        ReqSent.add("ReqReceived");
+
         Map<String, Object> map=new HashMap<>();
         map.put("Username", Username);
         map.put("Organisation", Organisation);
@@ -131,11 +146,18 @@ public class CreateProfile extends AppCompatActivity {
         map.put("ProfilePic","");
         map.put("PhoneNumber", PhoneNo);
         map.put("Interest", userInterest);
+        map.put("UserID", mAuth.getCurrentUser().getUid());
+        map.put("Friends", Friends);
+        map.put("ReqSent", ReqSent);
+        map.put("ReqReceived", ReqReceived);
+        map.put("SecretCrush", true);
         tinyDB.putObject("UserProfile", map);
         firestore.collection("Users").document(mAuth.getCurrentUser().getUid()).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(CreateProfile.this, "Profile Created", Toast.LENGTH_SHORT).show();
+                Intent i=new Intent(CreateProfile.this, HomeActivity.class);
+                startActivity(i);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
